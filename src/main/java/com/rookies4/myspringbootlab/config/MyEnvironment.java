@@ -1,13 +1,12 @@
-package com.rookies4.myspringbootlab.config.vo;
+package com.rookies4.myspringbootlab.config;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
-@Builder
 @Getter
 @ToString
+@Builder
 public class MyEnvironment {
-    private String mode;
-    private double rate;
+    String mode;
 }
