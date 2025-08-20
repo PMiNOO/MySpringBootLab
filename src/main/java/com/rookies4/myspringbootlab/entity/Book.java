@@ -1,12 +1,11 @@
 package com.rookies4.myspringbootlab.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "books") // 테이블명을 'books'로 지정
@@ -37,9 +36,17 @@ public class Book {
 
     // 정보 수정을 위한 Setter 메서드
     public void updateBook(String title, String author, Integer price, LocalDate publishDate) {
-        this.title = title;
-        this.author = author;
-        this.price = price;
-        this.publishDate = publishDate;
+        if (title != null) {
+            this.title = title;
+        }
+        if (author != null) {
+            this.author = author;
+        }
+        if (price != null) {
+            this.price = price;
+        }
+        if (publishDate != null) {
+            this.publishDate = publishDate;
+        }
     }
 }
