@@ -2,6 +2,7 @@ package com.rookies4.myspringbootlab.controller.dto;
 
 import com.rookies4.myspringbootlab.entity.Book;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -59,7 +60,7 @@ public class BookDTO {
         @NotBlank(message = "저자는 필수 입력 항목입니다.")
         private String author;
 
-        @NotBlank(message = "출판일자는 필수 입력 항목입니다.")
+        @NotNull(message = "출판일자는 필수 입력 항목입니다.")
         private LocalDate publishDate;
     }
     
