@@ -29,7 +29,7 @@ public class BookDTO {
         @Positive(message = "가격은 양수여야 합니다.")
         private Integer price;
 
-        //@NotBlank(message = "출판일자는 필수 입력 항목입니다.")
+        @NotBlank(message = "출판일자는 필수 입력 항목입니다.")
         private LocalDate publishDate;
 
         //BookCreateRequest => Entity
@@ -59,7 +59,7 @@ public class BookDTO {
         @NotBlank(message = "저자는 필수 입력 항목입니다.")
         private String author;
 
-        //@NotBlank(message = "출판일자는 필수 입력 항목입니다.")
+        @NotBlank(message = "출판일자는 필수 입력 항목입니다.")
         private LocalDate publishDate;
     }
     
