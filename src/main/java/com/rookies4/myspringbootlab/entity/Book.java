@@ -7,7 +7,11 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "books")
-@Getter @Setter
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Book {
 
     @Id
@@ -24,10 +28,20 @@ public class Book {
     @Column(unique = true, nullable = false)
     private String isbn;
 
-    @Column(nullable = false)
+    @Column
     private Integer price;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate publishDate;
 
+    @OneToOne(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private BookDetail bookDetail;
+
+    // 연관관계 편의 메서드: 양방향 관계를 한 번에 설정
+    public void setBookDetail(BookDetail bookDetail) {
+        this.bookDetail = bookDetail;
+        if (bookDetail != null) {
+            bookDetail.setBook(this);
+        }
+    }
 }
