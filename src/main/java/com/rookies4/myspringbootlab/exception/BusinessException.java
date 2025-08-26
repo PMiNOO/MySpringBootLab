@@ -17,4 +17,10 @@ public class BusinessException extends RuntimeException {
         this.message = message;
         this.httpStatus = httpStatus;
     }
+
+    // ===== ErrorCode를 사용하는 생성자 추가 =====
+    public BusinessException(ErrorCode errorCode, Object... args) {
+        this.message = errorCode.formatMessage(args);
+        this.httpStatus = errorCode.getHttpStatus();
+    }
 }

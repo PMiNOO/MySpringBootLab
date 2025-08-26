@@ -4,6 +4,8 @@ import com.rookies4.myspringbootlab.controller.dto.BookDTO;
 import com.rookies4.myspringbootlab.entity.Book;
 import com.rookies4.myspringbootlab.entity.BookDetail;
 import com.rookies4.myspringbootlab.exception.BusinessException;
+// ErrorCode를 임포트합니다.
+import com.rookies4.myspringbootlab.exception.ErrorCode;
 import com.rookies4.myspringbootlab.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,14 +23,18 @@ public class BookService {
     private final BookRepository bookRepository;
 
     private Book findBookById(Long id) {
+        // 기존: new BusinessException("Book Not Found with id: " + id, HttpStatus.NOT_FOUND)
+        // 변경: ErrorCode 사용
         return bookRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Book Not Found with id: " + id, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Book", "id", id));
     }
 
     @Transactional
     public BookDTO.Response createBook(BookDTO.Request request) {
         if (bookRepository.existsByIsbn(request.getIsbn())) {
-            throw new BusinessException("ISBN already exists: " + request.getIsbn(), HttpStatus.CONFLICT);
+            // 기존: new BusinessException("ISBN already exists: " + request.getIsbn(), HttpStatus.CONFLICT)
+            // 변경: ErrorCode 사용
+            throw new BusinessException(ErrorCode.ISBN_DUPLICATE, request.getIsbn());
         }
 
         Book book = Book.builder()
@@ -53,24 +59,31 @@ public class BookService {
         return BookDTO.Response.fromEntity(savedBook);
     }
 
+    // ... (getAllBooks 메서드는 변경 없음) ...
     public List<BookDTO.Response> getAllBooks() {
         return bookRepository.findAll().stream()
                 .map(BookDTO.Response::fromEntity)
                 .collect(Collectors.toList());
     }
 
+
     public BookDTO.Response getBookById(Long id) {
+        // 기존: new BusinessException("Book Not Found with id: " + id, HttpStatus.NOT_FOUND)
+        // 변경: ErrorCode 사용
         Book book = bookRepository.findByIdWithBookDetail(id)
-                .orElseThrow(() -> new BusinessException("Book Not Found with id: " + id, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Book", "id", id));
         return BookDTO.Response.fromEntity(book);
     }
 
     public BookDTO.Response getBookByIsbn(String isbn) {
+        // 기존: new BusinessException("Book Not Found with isbn: " + isbn, HttpStatus.NOT_FOUND)
+        // 변경: ErrorCode 사용
         Book book = bookRepository.findByIsbnWithBookDetail(isbn)
-                .orElseThrow(() -> new BusinessException("Book Not Found with isbn: " + isbn, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Book", "isbn", isbn));
         return BookDTO.Response.fromEntity(book);
     }
 
+    // ... (searchBooksByAuthor, searchBooksByTitle 메서드는 변경 없음) ...
     public List<BookDTO.Response> searchBooksByAuthor(String author) {
         return bookRepository.findByAuthorContainingIgnoreCase(author).stream()
                 .map(BookDTO.Response::fromEntity)
@@ -88,7 +101,9 @@ public class BookService {
         Book book = findBookById(id);
 
         if (!book.getIsbn().equals(request.getIsbn()) && bookRepository.existsByIsbn(request.getIsbn())) {
-            throw new BusinessException("ISBN already exists: " + request.getIsbn(), HttpStatus.CONFLICT);
+            // 기존: new BusinessException("ISBN already exists: " + request.getIsbn(), HttpStatus.CONFLICT)
+            // 변경: ErrorCode 사용
+            throw new BusinessException(ErrorCode.ISBN_DUPLICATE, request.getIsbn());
         }
 
         book.setTitle(request.getTitle());
@@ -108,6 +123,7 @@ public class BookService {
         return BookDTO.Response.fromEntity(bookRepository.save(book));
     }
 
+    // ... (patchBook, patchBookDetail 메서드 중 ISBN 중복 체크 부분 수정) ...
     @Transactional
     public BookDTO.Response patchBook(Long id, BookDTO.PatchRequest request) {
         Book book = findBookById(id);
@@ -119,7 +135,9 @@ public class BookService {
 
         if (request.getIsbn() != null && !book.getIsbn().equals(request.getIsbn())) {
             if (bookRepository.existsByIsbn(request.getIsbn())) {
-                throw new BusinessException("ISBN already exists: " + request.getIsbn(), HttpStatus.CONFLICT);
+                // 기존: new BusinessException("ISBN already exists: " + request.getIsbn(), HttpStatus.CONFLICT)
+                // 변경: ErrorCode 사용
+                throw new BusinessException(ErrorCode.ISBN_DUPLICATE, request.getIsbn());
             }
             book.setIsbn(request.getIsbn());
         }
@@ -153,10 +171,13 @@ public class BookService {
         return BookDTO.Response.fromEntity(bookRepository.save(book));
     }
 
+
     @Transactional
     public void deleteBook(Long id) {
         if (!bookRepository.existsById(id)) {
-            throw new BusinessException("Book Not Found with id: " + id, HttpStatus.NOT_FOUND);
+            // 기존: new BusinessException("Book Not Found with id: " + id, HttpStatus.NOT_FOUND)
+            // 변경: ErrorCode 사용
+            throw new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Book", "id", id);
         }
         bookRepository.deleteById(id);
     }
