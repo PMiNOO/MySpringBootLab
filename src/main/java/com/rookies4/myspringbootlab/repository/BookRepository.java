@@ -30,4 +30,13 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     // ISBN으로 책 조회 시 BookDetail을 함께 Fetch Join
     @Query("SELECT b FROM Book b JOIN FETCH b.bookDetail WHERE b.isbn = :isbn")
     Optional<Book> findByIsbnWithBookDetail(@Param("isbn") String isbn);
+
+    // --- [과제] Publisher 관련 새로 추가된 메서드 ---
+    List<Book> findByPublisherId(Long publisherId);
+
+    Long countByPublisherId(Long publisherId);
+
+    @Query("SELECT b FROM Book b LEFT JOIN FETCH b.bookDetail LEFT JOIN FETCH b.publisher WHERE b.id = :id")
+    Optional<Book> findByIdWithAllDetails(@Param("id") Long id);
+    // ------------------------------------------
 }

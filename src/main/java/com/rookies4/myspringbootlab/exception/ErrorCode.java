@@ -11,7 +11,12 @@ public enum ErrorCode {
     RESOURCE_NOT_FOUND("%s not found with %s: %s", HttpStatus.NOT_FOUND),
 
     // 책 관련 에러
-    ISBN_DUPLICATE("Book already exists with ISBN: %s", HttpStatus.CONFLICT);
+    ISBN_DUPLICATE("Book already exists with ISBN: %s", HttpStatus.CONFLICT),
+
+    // --- [과제] Publisher 관련 에러 코드 추가 ---
+    PUBLISHER_NAME_DUPLICATE("Publisher already exists with name: %s", HttpStatus.CONFLICT),
+    PUBLISHER_HAS_BOOKS("Cannot delete publisher with id: %s. It has %s books", HttpStatus.CONFLICT);
+    // ----------------------------------------
 
     private final String messageTemplate;
     private final HttpStatus httpStatus;

@@ -37,6 +37,12 @@ public class Book {
     @OneToOne(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     private BookDetail bookDetail;
 
+    // --- [과제] Publisher 연관관계 추가 ---
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
+    // ---------------------------------
+
     // 연관관계 편의 메서드: 양방향 관계를 한 번에 설정
     public void setBookDetail(BookDetail bookDetail) {
         this.bookDetail = bookDetail;
